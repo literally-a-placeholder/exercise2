@@ -3,9 +3,14 @@ from svgpathtools import svg2paths
 from PIL import Image, ImageDraw
 import numpy
 from tqdm import tqdm
-
+import os
 
 def svg_to_coordinates(lst):
+    """
+    coversion function
+    :param lst: list of lists of svg paths
+    :return: list of list of coordinates as tuples
+    """
     output=[]
     f=float
     for e in lst:
@@ -15,22 +20,41 @@ def svg_to_coordinates(lst):
         output.append(figure)
     return output
 
-paths, attributes = svg2paths('ground-truth/locations/270.svg')
+def crop(page_number):
+    """
+    crop images by vector masks
+    :param page_number: Page Number
+    :return: cropped/page_number/cropped_image.png
+    """
+    try:
+        # Create target Directory
+        os.mkdir("cropped")
+        print("Root Directory Created")
+    except:
+        print("Root Directory Already Exists.")
 
-paths_list=[]
-for k, v in enumerate(attributes):
-    paths_list.append(v['d'].split(" "))  # print d-string of k-th path in SVG
+    try:
+        # Create target Directory
+        os.mkdir("cropped/{}".format(page_number))
+        print("Directory "+ '{}'.format(page_number)+ " Created ")
+    except:
+        print("Directory " + '{}'.format(page_number) + " Already Exists.")
 
+    #open vector graphic and crate list of lists of coordinates
+    paths, attributes = svg2paths('ground-truth/locations/{}.svg'.format(page_number))
+    paths_list = []
+    for k, v in enumerate(attributes):
+        paths_list.append(v['d'].split(" "))  # print d-string of k-th path in SVG
+    coordinates=svg_to_coordinates(paths_list)
 
-def crop(image,coordinates):
     # read image as RGB and add alpha (transparency)
-    im = Image.open(image).convert("RGBA")
+    im = Image.open('images/{}.jpg'.format(page_number)).convert("RGBA")
 
     # convert to numpy (for convenience)
     imArray = numpy.asarray(im)
 
     # create mask
-    for counter, coords in tqdm(enumerate(coordinates)):
+    for counter, coords in (enumerate(tqdm(coordinates))):
         polygon = coords
         maskIm = Image.new('L', (imArray.shape[1], imArray.shape[0]), 0)
         ImageDraw.Draw(maskIm).polygon(polygon, outline=1, fill=1)
@@ -45,13 +69,23 @@ def crop(image,coordinates):
         # transparency (4th column)
         newImArray[:,:,3] = mask*255
 
+
+
         # back to Image from numpy
-        newIm = Image.fromarray(newImArray, "RGBA")
+        newIm = Image.fromarray(newImArray,"RGBA")
 
-        #outocrop Image
-        newIm = autocrop_image(newIm)
-        newIm.save("cropped/{}.png".format(counter))
+        #removing transparent borders
+        bbox = newIm.convert("RGBa").getbbox()
+        copped_image=newIm.crop(bbox)
 
+        #apply image correction here
 
+        #resizing every image to 100x100 aspect ratio
+        resized=copped_image.resize((100,100), Image.ANTIALIAS)
 
-crop("images/270.jpg",svg_to_coordinates(paths_list))
+        resized.save("cropped/{}/{}.png".format(page_number,counter))
+
+#run
+for i in [270,271,273,274,275,276,277,278,279,300,301,302,303,304]:
+    print("{}.jpg started".format(i))
+    crop(i)
