@@ -1,9 +1,25 @@
 # Keyword Spotting Data
 
-##Task ##
+## Task ##
 Your task is to develop a machine learning approach for spotting keywords in the provided documents.
 You can test your approach on the provided training and validation dataset where you find a list of keywords that you can find for certain at least once in each set.
 
+## Run ##
+Clone the project and run the following command from the root folder to install all dependencies.
+
+```python
+pip install -r requirements.txt
+```
+
+Execute 'run_task.py' (For now, this just crops and pre-processes the images...) 
+
+## Install new Packages ##
+Make sure to install new packages using the following commands in order to make sure that the dependencies are listed in the requirements.txt file:
+
+```python
+pip install <package> 
+pip freeze > requirements.txt
+```
 
 ## Data ##
 In this repository you'll find all the data necessary for your KeywordSpotting Task.
