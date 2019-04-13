@@ -3,17 +3,18 @@ from PIL import Image
 
 
 def main():
-    print(featurize("dummy270-19.png"))
+    feat_270_01_02 = featurize('otsu_sample\\otsu_270-01-02.png')
+    print(feat_270_01_02)
 
 
 def featurize(img):
-    img = np.asarray(Image.open(img))
+    img = np.asarray(Image.open(img), dtype='uint8')
 
     feature_mat = np.zeros((4, 100))
     func_list = [lower_contour, upper_contour, bw_transitions, fraction_of_bw_between_uclc]
 
     for i, func in enumerate(func_list):
-        feature_mat[i] = np.apply_along_axis(func, axis=1, arr=img)
+        feature_mat[i] = np.apply_along_axis(func, axis=0, arr=img)
 
     return feature_mat
 
@@ -51,10 +52,10 @@ def fraction_of_bw_between_uclc(img_col):
     low = lower_contour(img_col)
     between_uclc = img_col[upp:low+1]
     if between_uclc.size != 0:
-        result = np.count_nonzero(between_uclc) / between_uclc.size
+        result = np.count_nonzero(between_uclc) / between_uclc.size * 100
     return result
 # __________________________________________
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
