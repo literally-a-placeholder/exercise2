@@ -16,10 +16,10 @@ def main():
     if not os.path.isdir('binarized'):
         os.mkdir("binarized")
         print('Starting binarization...')
-        for img in tqdm(os.listdir('cropped\\')):
-            image = io.imread('cropped\\' + img)
+        for img in tqdm(os.listdir('cropped/')):
+            image = io.imread('cropped/' + img)
             bin_img = otsu_binarize(image)
-            io.imsave('binarized\\' + img, bin_img)
+            io.imsave('binarized/' + img, bin_img)
         print('Binarization done.')
 
     # list some paths
@@ -44,12 +44,12 @@ def main():
 
 
 def get_train_valid_page_nrs():
-    with open('task\\train.txt', 'r') as f:
+    with open('task/train.txt', 'r') as f:
         train_pages = []
         for line in f:
             train_pages.append(line)
 
-    with open('task\\valid.txt', 'r') as f:
+    with open('task/valid.txt', 'r') as f:
         valid_pages = []
         for line in f:
             valid_pages.append(line)
@@ -60,17 +60,17 @@ def get_train_valid_page_nrs():
 def get_img_paths(train_pages, valid_pages):
     train_img_paths = []
     for page_nr in train_pages:
-        train_img_paths.append(glob.glob('cropped\\' + page_nr + '*'))
+        train_img_paths.append(glob.glob('cropped/' + page_nr + '*'))
 
     valid_img_paths = []
     for page_nr in valid_pages:
-        valid_img_paths.append(glob.glob('cropped\\' + page_nr + '*'))
+        valid_img_paths.append(glob.glob('cropped/' + page_nr + '*'))
 
     return train_img_paths, valid_img_paths
 
 
 def get_keywords():
-    with open('task\\keywords.txt') as f:
+    with open('task/keywords.txt') as f:
         keywords = []
         for line in f:
             keywords.append(line)

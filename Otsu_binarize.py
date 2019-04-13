@@ -17,7 +17,7 @@ def main():
     sample_list = ['270-01-01.png', '270-01-02.png', '270-01-03.png',
                    '270-01-04.png', '270-01-05.png', '270-01-06.png', '270-01-07.png']
     for i, img in enumerate(sample_list):
-        filepath = 'otsu_sample\\' + img
+        filepath = 'otsu_sample/' + img
         image = io.imread(filepath)
 
         binary_global = otsu_binarize(image)
@@ -35,8 +35,8 @@ def main():
         for a in ax:
             a.axis('off')
 
-        io.imsave('otsu_sample\\otsu_' + img, binary_global)
-        io.imsave('otsu_sample\\' + img, image)
+        io.imsave('otsu_sample/otsu_' + img, binary_global)
+        io.imsave('otsu_sample/' + img, image)
 
     plt.show()
 

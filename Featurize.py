@@ -4,9 +4,9 @@ from sklearn import preprocessing
 
 
 def main():
-    feat_270_01_02 = featurize('binarized\\270-01-02.png')
+    feat_270_01_02 = featurize('otsu_sample/otsu_270-01-02.png')
     print(feat_270_01_02)
-    norm_feat_270_01_02 = featurize('binarized\\270-01-02.png', minmax=True)
+    norm_feat_270_01_02 = featurize('otsu_sample/otsu_270-01-02.png', minmax=True)
     print(norm_feat_270_01_02)
 
 
