@@ -15,7 +15,7 @@ def svg_to_coordinates(lst):
     f=float
     for e in lst:
         figure=[]
-        for i in range(len(e)/3):
+        for i in range(len(e)//3):
             figure.append((f(e[i*3+1]),f(e[i*3+2])))
         output.append(figure)
     return output
