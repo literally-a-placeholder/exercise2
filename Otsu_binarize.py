@@ -17,7 +17,7 @@ def main():
     sample_list = ['270-01-01.png', '270-01-02.png', '270-01-03.png',
                    '270-01-04.png', '270-01-05.png', '270-01-06.png', '270-01-07.png']
     for i, img in enumerate(sample_list):
-        filepath = 'cropped\\' + img
+        filepath = 'otsu_sample\\' + img
         image = io.imread(filepath)
 
         binary_global = otsu_binarize(image)
@@ -46,7 +46,6 @@ def otsu_binarize(img):
     img = rgb2gray(img)
     global_thresh = threshold_otsu(img, nbins=NBINS)
     binary_global = img > global_thresh
-    # convert to uint8 array and use numpy's fancy indexing to get rid of the empty channels
     binary_global = np.uint8(binary_global * 255)
     return binary_global
 
