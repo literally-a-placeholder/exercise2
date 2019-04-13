@@ -7,7 +7,7 @@ import os
 
 def svg_to_coordinates(lst):
     """
-    coversion function
+    conversion function
     :param lst: list of lists of svg paths
     :return: list of list of coordinates as tuples
     """
