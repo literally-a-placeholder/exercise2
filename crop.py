@@ -20,6 +20,10 @@ def svg_to_coordinates(lst):
         output.append(figure)
     return output
 
+def find_adjacents(value, items):
+    i = items.index(value)
+    return items[i+1:i+2]
+
 def crop(page_number):
     """
     crop images by vector masks
@@ -33,16 +37,21 @@ def crop(page_number):
     except:
         print("Root Directory Already Exists.")
 
-    try:
-        # Create target Directory
-        os.mkdir("cropped/{}".format(page_number))
-        print("Directory "+ '{}'.format(page_number)+ " Created ")
-    except:
-        print("Directory " + '{}'.format(page_number) + " Already Exists.")
-
     #open vector graphic and crate list of lists of coordinates
     paths, attributes = svg2paths('ground-truth/locations/{}.svg'.format(page_number))
     paths_list = []
+
+    #get ID's
+    svg = open('ground-truth/locations/{}.svg'.format(page_number), "r")
+    IDs=[]
+    for aline in svg:
+        try:
+            splitted = (aline.split("\" "))
+            IDs.append("".join(find_adjacents("stroke-width=\"1", splitted))[4:])
+        except ValueError:
+            pass
+    svg.close()
+
     for k, v in enumerate(attributes):
         paths_list.append(v['d'].split(" "))  # print d-string of k-th path in SVG
     coordinates=svg_to_coordinates(paths_list)
@@ -78,12 +87,12 @@ def crop(page_number):
         bbox = newIm.convert("RGBa").getbbox()
         copped_image=newIm.crop(bbox)
 
-        #apply image correction here
+        # apply image correction here
 
         #resizing every image to 100x100 aspect ratio
         resized=copped_image.resize((100,100), Image.ANTIALIAS)
 
-        resized.save("cropped/{}/{}.png".format(page_number,counter))
+        resized.save("cropped/{}.png".format(IDs[counter]))
 
 #run
 for i in [270,271,273,274,275,276,277,278,279,300,301,302,303,304]:
