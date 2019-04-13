@@ -1,5 +1,6 @@
+import numpy as np
 import matplotlib.pyplot as plt
-from skimage import io, img_as_uint
+from skimage import io
 from skimage.filters import threshold_otsu
 
 
@@ -34,8 +35,7 @@ def main():
 def otsu_binarize(img):
     global_thresh = threshold_otsu(img)
     binary_global = img > global_thresh
-
-    return img_as_uint(binary_global)
+    return np.uint8(binary_global*255)
 
 
 if __name__ == '__main__':

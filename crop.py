@@ -5,6 +5,14 @@ import numpy
 from tqdm import tqdm
 import os
 
+
+def main():
+    # run
+    for i in [270,271,273,274,275,276,277,278,279,300,301,302,303,304]:
+        print("{}.jpg started".format(i))
+        crop(i)
+
+
 def svg_to_coordinates(lst):
     """
     conversion function
@@ -20,9 +28,11 @@ def svg_to_coordinates(lst):
         output.append(figure)
     return output
 
+
 def find_adjacents(value, items):
     i = items.index(value)
     return items[i+1:i+2]
+
 
 def crop(page_number):
     """
@@ -94,7 +104,6 @@ def crop(page_number):
 
         resized.save("cropped/{}.png".format(IDs[counter]))
 
-#run
-for i in [270,271,273,274,275,276,277,278,279,300,301,302,303,304]:
-    print("{}.jpg started".format(i))
-    crop(i)
+
+if __name__ == '__main__':
+    main()
