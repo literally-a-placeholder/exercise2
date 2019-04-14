@@ -1,9 +1,10 @@
 import os
 import glob
+import crop
 import numpy as np
+
 from skimage import io
 from tqdm import tqdm
-import crop
 from Otsu_binarize import otsu_binarize
 
 
@@ -17,8 +18,8 @@ def main():
         os.mkdir("binarized")
         print('Starting binarization...')
         for img in tqdm(os.listdir('cropped/')):
-            image = io.imread('cropped/' + img)
-            bin_img = otsu_binarize(image)
+            filepath = 'cropped/' + img
+            bin_img = otsu_binarize(filepath)
             io.imsave('binarized/' + img, bin_img)
         print('Binarization done.')
 
