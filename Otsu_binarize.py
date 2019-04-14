@@ -1,14 +1,10 @@
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from skimage import io, img_as_uint
-from skimage.color import rgba2rgb, rgb2gray
-from skimage.filters import threshold_otsu
+import cv2 as cv
 
+from skimage import io
 
-# low bin counts results in finer lines but also fragmentation of originally already fine lines
-# high bin counts result in bolder lines but also sometimes filling of the counter (the 'hole') of a letter
-NBINS = 42
 
 def main():
     if not os.path.isdir('otsu_sample'):
@@ -17,10 +13,10 @@ def main():
     sample_list = ['270-01-01.png', '270-01-02.png', '270-01-03.png',
                    '270-01-04.png', '270-01-05.png', '270-01-06.png', '270-01-07.png']
     for i, img in enumerate(sample_list):
-        filepath = 'otsu_sample/' + img
+        filepath = './otsu_sample/' + img
         image = io.imread(filepath)
 
-        binary_global = otsu_binarize(image)
+        binarized_image = otsu_binarize(filepath)
 
         fig, axes = plt.subplots(nrows=2, figsize=(7, 8))
         ax = axes.ravel()
@@ -29,26 +25,37 @@ def main():
         ax[0].imshow(image)
         ax[0].set_title('Original')
 
-        ax[1].imshow(binary_global)
+        ax[1].imshow(binarized_image)
         ax[1].set_title('Global thresholding')
 
         for a in ax:
             a.axis('off')
 
-        io.imsave('otsu_sample/otsu_' + img, binary_global)
+        io.imsave('otsu_sample/otsu_' + img, binarized_image)
         io.imsave('otsu_sample/' + img, image)
 
     plt.show()
 
 
-def otsu_binarize(img):
-    img = rgba2rgb(img)
-    img = rgb2gray(img)
-    global_thresh = threshold_otsu(img, nbins=NBINS)
-    binary_global = img > global_thresh
-    binary_global = np.uint8(binary_global * 255)
-    return binary_global
+def otsu_binarize(filepath):
+    img = cv.imread(filepath, cv.IMREAD_UNCHANGED)
+    img = make_background_white(img)
 
+    blur = cv.GaussianBlur(img, (5, 5), 0)  # apply gaussian filter to remove noise from the picture
+    threshold, dst = cv.threshold(blur, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)  # apply otsu threshold
+    binary_global = img > threshold
+    binarized_image = np.uint8(binary_global * 255)
+
+    return binarized_image
+
+
+def make_background_white(img):
+    alpha_channel = img[:, :, 3]
+    _, mask = cv.threshold(alpha_channel, 254, 255, cv.THRESH_BINARY)  # binarize mask
+    color = img[:, :, :3]
+    new_img = cv.bitwise_not(cv.bitwise_not(color, mask=mask))
+    img = cv.cvtColor(new_img, cv.COLOR_BGR2GRAY)
+    return img
 
 if __name__ == '__main__':
     main()
