@@ -1,7 +1,9 @@
+import os
 import glob
 from tqdm import tqdm
 import numpy as np
 from Featurize import featurize
+from DTW import DTWDistance
 
 
 def get_train_valid_page_nrs():
@@ -39,15 +41,66 @@ def get_keywords():
     return keywords
 
 
+def get_ids_of_keyword(keyword, only_train=False):
+    ids = []
+    with open('ground-truth/transcription.txt', 'r') as f:
+        for line in f:
+            if only_train:
+                if keyword in line and line.startswith('2'):
+                    ids.append(line.strip()[:9])
+            else:
+                if keyword in line:
+                    ids.append(line.strip()[:9])
+
+    return ids
+
+
+def ids_to_paths(ids):
+    paths = [None]*len(ids)
+    for i, one_id in enumerate(ids):
+        paths[i] = 'binarized/' + one_id + '.png'
+    return paths
+
+
 def featurize_list(img_paths):
     featurized_list = np.zeros((len(img_paths), 4, 100))
 
-    print('Featurize multiple images...')
-    for i, path in tqdm(enumerate(img_paths)):
+    print('\nFeaturize multiple images...\n')
+    for i, path in enumerate(tqdm(img_paths)):
         featurized_list[i] = featurize(path, minmax=True)
 
     return featurized_list
 
 
-def compare_all(keyword, featurized_keyword_samples, featurized_valid):
-    pass
+def compare_all(keyword, featurized_valid, save_as_txt=False):
+    """Compare all found samples of the given keyword against all valid words with dynamic time warping (DTW).
+    Output: <keyword>.txt containing all id's of the valid words and their scores, sorted from best to worst"""
+    keyword_ids = get_ids_of_keyword(keyword, only_train=True)
+    keyword_paths = ids_to_paths(keyword_ids)
+    featurized_keywords = featurize_list(keyword_paths)
+
+    result = {}
+    print('\nSearching all valid words for keyword \'{}\'...\n'.format(keyword))
+    for valid_word in tqdm(featurized_valid, mininterval=3):
+
+        valid_word_distances = [np.inf] * len(keyword_ids)
+        for i, keyword_word in enumerate(featurized_keywords):
+            valid_word_distances[i] = DTWDistance(keyword_word, valid_word)
+            lowest_dist = min(valid_word_distances)
+            ind_lowest_dist = valid_word_distances.index(lowest_dist)
+            result[keyword_ids[ind_lowest_dist]] = lowest_dist
+
+    if save_as_txt:
+        target_dir = 'results'
+        if not os.path.isdir(target_dir):
+            os.mkdir(target_dir)
+
+        sort_result_and_save_as_txt(result, keyword, target_dir)
+
+    return result
+
+
+def sort_result_and_save_as_txt(result, keyword, target_dir):
+    with open('{}/{}.txt'.format(target_dir, keyword), 'w') as f:
+        for key, value in sorted(result.items(), key=lambda item: item[1]):
+            f.write('{} {}\n'.format(key, value))

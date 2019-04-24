@@ -26,19 +26,14 @@ def main():
     train_img_paths, valid_img_paths = get_img_paths(train_pages, valid_pages)
     keywords = get_keywords()
 
-    # the following is a proposal for the pipeline:
-    # TODO: get id's of keywords from 'ground-truth/transcription.txt'
-
-    # TODO: featurize ALL images from valid pages and store in memory -> valid_searchspace
+    # featurize ALL images from valid pages and store to use for all keywords
     featurized_valid = featurize_list(valid_img_paths)
 
-    # TODO: for each keyword do:
-
-        # TODO: featurize images from the train pages for this keyword
-
-        # TODO: compare these to the valid_searchspace with DTW
-
-        # TODO: sort list of matches / choose threshold above which to keep matches
+    # for each keyword compare to all valid words and save results in <keyword>.txt
+    print('\nCompute all distances of each keyword to each word of the valid pages...\n')
+    for keyword in tqdm(keywords):
+        compare_all(keyword, featurized_valid, save_as_txt=True)
+        print('\nResults saved in \'{}.txt\'\n'.format(keyword))
 
     # TODO: calculate precision/recall
 
