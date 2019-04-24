@@ -1,11 +1,9 @@
 import os
-import glob
-import crop
-import numpy as np
-
 from skimage import io
 from tqdm import tqdm
+import crop
 from Otsu_binarize import otsu_binarize
+from run_task_helpers import *
 
 
 def main():
@@ -32,6 +30,7 @@ def main():
     # TODO: get id's of keywords from 'ground-truth/transcription.txt'
 
     # TODO: featurize ALL images from valid pages and store in memory -> valid_searchspace
+    featurized_valid = featurize_list(valid_img_paths)
 
     # TODO: for each keyword do:
 
@@ -42,41 +41,6 @@ def main():
         # TODO: sort list of matches / choose threshold above which to keep matches
 
     # TODO: calculate precision/recall
-
-
-def get_train_valid_page_nrs():
-    with open('task/train.txt', 'r') as f:
-        train_pages = []
-        for line in f:
-            train_pages.append(line)
-
-    with open('task/valid.txt', 'r') as f:
-        valid_pages = []
-        for line in f:
-            valid_pages.append(line)
-
-    return train_pages, valid_pages
-
-
-def get_img_paths(train_pages, valid_pages):
-    train_img_paths = []
-    for page_nr in train_pages:
-        train_img_paths.append(glob.glob('cropped/' + page_nr + '*'))
-
-    valid_img_paths = []
-    for page_nr in valid_pages:
-        valid_img_paths.append(glob.glob('cropped/' + page_nr + '*'))
-
-    return train_img_paths, valid_img_paths
-
-
-def get_keywords():
-    with open('task/keywords.txt') as f:
-        keywords = []
-        for line in f:
-            keywords.append(line)
-
-    return keywords
 
 
 if __name__ == '__main__':
