@@ -11,7 +11,7 @@ Clone the project and run the following command from the root folder to install 
 pip install -r requirements.txt
 ```
 
-Execute 'run_task.py' (For now, this just crops and pre-processes the images...) 
+Execute 'run_task.py'
 
 ## Install new Packages ##
 Make sure to install new packages using the following commands in order to make sure that the dependencies are listed in the requirements.txt file:
