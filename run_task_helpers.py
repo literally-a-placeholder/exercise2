@@ -65,30 +65,30 @@ def ids_to_paths(ids):
 def featurize_list(img_paths):
     featurized_list = np.zeros((len(img_paths), 4, 100))
 
-    print('\nFeaturize multiple images...\n')
-    for i, path in enumerate(tqdm(img_paths)):
+    for i, path in enumerate(img_paths):
         featurized_list[i] = featurize(path, minmax=True)
 
     return featurized_list
 
 
-def compare_all(keyword, featurized_valid, save_as_txt=False):
+def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False):
     """Compare all found samples of the given keyword against all valid words with dynamic time warping (DTW).
     Output: <keyword>.txt containing all id's of the valid words and their scores, sorted from best to worst"""
     keyword_ids = get_ids_of_keyword(keyword, only_train=True)
+    valid_ids = valid_ids
     keyword_paths = ids_to_paths(keyword_ids)
     featurized_keywords = featurize_list(keyword_paths)
 
     result = {}
-    print('\nSearching all valid words for keyword \'{}\'...\n'.format(keyword))
-    for valid_word in tqdm(featurized_valid, mininterval=3):
+    print('\nSearching all valid words for keyword \'{}\'...'.format(keyword))
+    for valid_id, valid_word in enumerate(tqdm(featurized_valid, mininterval=3)):
 
         valid_word_distances = [np.inf] * len(keyword_ids)
         for i, keyword_word in enumerate(featurized_keywords):
             valid_word_distances[i] = DTWDistance(keyword_word, valid_word)
-            lowest_dist = min(valid_word_distances)
-            ind_lowest_dist = valid_word_distances.index(lowest_dist)
-            result[keyword_ids[ind_lowest_dist]] = lowest_dist
+
+        lowest_dist = min(valid_word_distances)
+        result[valid_ids[valid_id]] = lowest_dist
 
     if save_as_txt:
         target_dir = 'results'

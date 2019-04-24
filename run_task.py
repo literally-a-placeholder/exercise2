@@ -1,4 +1,6 @@
 import os
+from multiprocessing import Pool, cpu_count
+from functools import partial
 from skimage import io
 from tqdm import tqdm
 import crop
@@ -21,21 +23,31 @@ def main():
             io.imsave('binarized/' + img, bin_img)
         print('Binarization done.')
 
-    # list some paths
+    # list and store some paths and ids
     train_pages, valid_pages = get_train_valid_page_nrs()
     train_img_paths, valid_img_paths = get_img_paths(train_pages, valid_pages)
     keywords = get_keywords()
+    valid_img_ids = [path[10:-4] for path in valid_img_paths]
 
     # featurize ALL images from valid pages and store to use for all keywords
-    featurized_valid = featurize_list(valid_img_paths)
+    print('\nFeaturize all valid images...')
+    featurized_valid = featurize_list(valid_img_paths[:100])
 
     # for each keyword compare to all valid words and save results in <keyword>.txt
-    print('\nCompute all distances of each keyword to each word of the valid pages...\n')
-    for keyword in tqdm(keywords):
-        compare_all(keyword, featurized_valid, save_as_txt=True)
-        print('\nResults saved in \'{}.txt\'\n'.format(keyword))
+    print('\nCompute all distances of each keyword to each word of the valid pages...')
+
+    pool = Pool(processes=cpu_count())
+    func = partial(multicore_compare, valid=featurized_valid, valid_ids=valid_img_ids)
+    pool.map(func, keywords[:10])
+    pool.close()
+    pool.join()
 
     # TODO: calculate precision/recall
+
+
+def multicore_compare(keyword, valid, valid_ids):
+    compare_all(keyword, valid, valid_ids, save_as_txt=True)
+    print('\nResults saved in \'{}.txt\'\n'.format(keyword))
 
 
 if __name__ == '__main__':
