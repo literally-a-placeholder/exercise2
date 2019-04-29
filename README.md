@@ -2,7 +2,8 @@
 
 ## Task ##
 Your task is to develop a machine learning approach for spotting keywords in the provided documents.
-You can test your approach on the provided training and validation dataset where you find a list of keywords that you can find for certain at least once in each set.
+You can test your approach on the provided training and validation dataset where you find a list of
+keywords that you can find for certain at least once in each set.
 
 ## Run ##
 Clone the project and run the following command from the root folder to install all dependencies.
@@ -13,8 +14,14 @@ pip install -r requirements.txt
 
 Execute 'run_task.py'
 
+Sidenotes:
+
+- only 105 results are generated, of 107 specified keywords in keywords.txt, since the two words
+'order' and 'waggons' appear each in upper and lower case, which is ignored.
+
 ## Install new Packages ##
-Make sure to install new packages using the following commands in order to make sure that the dependencies are listed in the requirements.txt file:
+Make sure to install new packages using the following commands in order to make sure that the
+dependencies are listed in the requirements.txt file:
 
 ```python
 pip install <package> 
@@ -32,7 +39,8 @@ Contains ground-truth data.
 
 #### transcription.txt ####
 
-Contains the transcription of all words (on a character level) of the whole dataset. The Format is as follows:
+Contains the transcription of all words (on a character level) of the whole dataset. The Format is
+as follows:
 
 	- XXX-YY-ZZ: XXX = Document Number, YY = Line Number, ZZ = Word Number
 	- Contains the character-wise transcription of the word (letters seperated with dashes)
@@ -64,4 +72,5 @@ Contains a splitting of the documents into a training and a validation set.
 
 
 #### keywords.txt ####
-Contains a list of keywords of which each will be at least **once** in the training and validation dataset.
+Contains a list of keywords of which each will be at least **once** in the training and validation
+dataset.
