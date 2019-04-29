@@ -6,6 +6,7 @@ from tqdm import tqdm
 import crop
 from Otsu_binarize import otsu_binarize
 from run_task_helpers import *
+import normalize_results
 import evaluation
 
 
@@ -44,6 +45,7 @@ def main():
     pool.join()
 
     # calculate precision/recall
+    normalize_results.main()
     evaluation.main()
 
 
