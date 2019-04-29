@@ -1,5 +1,6 @@
 import os
 import glob
+from math import log
 from tqdm import tqdm
 import numpy as np
 from Featurize import featurize
@@ -104,12 +105,11 @@ def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False):
 
 def sort_result_and_save_as_txt(result, keyword, target_dir):
     with open('{}/{}.txt'.format(target_dir, keyword), 'w') as f:
-        for key, value in sorted(result.items(), key=lambda item: item[1]):
+        for key, value in sorted(result.items(), key=lambda item: item[1], reverse=True):
             f.write('{} {}\n'.format(key, value))
 
 
 def normalize_dict_values(d):
-    """Normalize the score values to mean=0 and std=1"""
-    mean = np.mean(list(d.values()))
-    std = np.std(list(d.values()))
-    return {key: (value-mean)/std for key, value in d.items()}
+    """Normalize the score values to sum up to 1, then transform with abs(log(x)) to get rid of small values."""
+    s = abs(log(np.sum(list(d.values()))))
+    return {key: value/s for key, value in d.items()}
