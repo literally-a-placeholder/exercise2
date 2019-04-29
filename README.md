@@ -21,6 +21,8 @@ Sidenotes:
 - optionally run 'normalize_results' after the calculation to evaluate its effect on precision and
 recall. (trying to account for keywords with naturally higher distances than others, could lead to
 better results in general)
+- the resulting plot from the evaluation is still not entierly correct (start of the line should be
+at a precision value of 1 on the left side), due to some unresolved bugs
 
 ## Install new Packages ##
 Make sure to install new packages using the following commands in order to make sure that the
