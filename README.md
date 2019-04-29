@@ -24,6 +24,8 @@ better results in general)
 - the resulting plot from the evaluation is still not entierly correct (start of the line should be
 at a precision value of 1 on the left side), due to some unresolved bugs
 
+See overall precision/recall-plot 'plot_norm_results_overall.png' for the most recent evaluation.
+
 ## Install new Packages ##
 Make sure to install new packages using the following commands in order to make sure that the
 dependencies are listed in the requirements.txt file:
