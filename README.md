@@ -18,6 +18,9 @@ Sidenotes:
 
 - only 105 results are generated, of 107 specified keywords in keywords.txt, since the two words
 'order' and 'waggons' appear each in upper and lower case, which is ignored.
+- optionally run 'normalize_results' after the calculation to evaluate its effect on precision and
+recall. (trying to account for keywords with naturally higher distances than others, could lead to
+better results in general)
 
 ## Install new Packages ##
 Make sure to install new packages using the following commands in order to make sure that the

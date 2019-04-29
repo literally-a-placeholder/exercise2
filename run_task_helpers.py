@@ -72,7 +72,7 @@ def featurize_list(img_paths):
     return featurized_list
 
 
-def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False):
+def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False, normalize=False):
     """Compare all found samples of the given keyword against all valid words with dynamic time warping (DTW).
     Output: <keyword>.txt containing all id's of the valid words and their scores, sorted from best to worst"""
     keyword_ids = get_ids_of_keyword(keyword, only_train=True)
@@ -91,8 +91,6 @@ def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False):
         lowest_dist = min(valid_word_distances)
         result[valid_ids[valid_id]] = lowest_dist
 
-    result = normalize_dict_values(result)
-
     if save_as_txt:
         target_dir = 'results'
         if not os.path.isdir(target_dir):
@@ -107,9 +105,3 @@ def sort_result_and_save_as_txt(result, keyword, target_dir):
     with open('{}/{}.txt'.format(target_dir, keyword), 'w') as f:
         for key, value in sorted(result.items(), key=lambda item: item[1], reverse=True):
             f.write('{} {}\n'.format(key, value))
-
-
-def normalize_dict_values(d):
-    """Normalize the score values to sum up to 1, then transform with abs(log(x)) to get rid of small values."""
-    s = abs(log(np.sum(list(d.values()))))
-    return {key: value/s for key, value in d.items()}
