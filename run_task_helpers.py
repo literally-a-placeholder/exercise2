@@ -105,3 +105,8 @@ def sort_result_and_save_as_txt(result, keyword, target_dir):
     with open('{}/{}.txt'.format(target_dir, keyword), 'w') as f:
         for key, value in sorted(result.items(), key=lambda item: item[1], reverse=True):
             f.write('{} {}\n'.format(key, value))
+
+
+def multicore_compare(keyword, valid, valid_ids):
+    compare_all(keyword, valid, valid_ids, save_as_txt=True)
+    print('\nResults saved in \'{}.txt\'\n'.format(keyword))

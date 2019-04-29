@@ -6,6 +6,7 @@ from tqdm import tqdm
 import crop
 from Otsu_binarize import otsu_binarize
 from run_task_helpers import *
+import evaluation
 
 
 def main():
@@ -42,12 +43,8 @@ def main():
     pool.close()
     pool.join()
 
-    # TODO: calculate precision/recall
-
-
-def multicore_compare(keyword, valid, valid_ids):
-    compare_all(keyword, valid, valid_ids, save_as_txt=True)
-    print('\nResults saved in \'{}.txt\'\n'.format(keyword))
+    # calculate precision/recall
+    evaluation.main()
 
 
 if __name__ == '__main__':
