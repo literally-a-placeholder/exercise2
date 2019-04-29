@@ -90,6 +90,8 @@ def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False):
         lowest_dist = min(valid_word_distances)
         result[valid_ids[valid_id]] = lowest_dist
 
+    result = normalize_dict_values(result)
+
     if save_as_txt:
         target_dir = 'results'
         if not os.path.isdir(target_dir):
@@ -104,3 +106,10 @@ def sort_result_and_save_as_txt(result, keyword, target_dir):
     with open('{}/{}.txt'.format(target_dir, keyword), 'w') as f:
         for key, value in sorted(result.items(), key=lambda item: item[1]):
             f.write('{} {}\n'.format(key, value))
+
+
+def normalize_dict_values(d):
+    """Normalize the score values to mean=0 and std=1"""
+    mean = np.mean(list(d.values()))
+    std = np.std(list(d.values()))
+    return {key: (value-mean)/std for key, value in d.items()}
