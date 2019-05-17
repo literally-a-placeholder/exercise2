@@ -44,6 +44,9 @@ def main():
     pool.close()
     pool.join()
 
+    # combine result files
+    combine_results()
+
     # calculate precision/recall
     #normalize_results.main()
     #evaluation.main()

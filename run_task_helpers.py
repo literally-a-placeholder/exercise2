@@ -1,6 +1,6 @@
 import os
 import glob
-from math import log
+import shutil
 from tqdm import tqdm
 import numpy as np
 from Featurize import featurize
@@ -115,6 +115,20 @@ def sort_result_and_save_as_txt(result, keyword, target_dir):
             keyword_result_string += ', ' + str(key) + ', ' + str(value)
 
         f.write(keyword_result_string + '\n')
+
+
+def combine_results():
+    results = ''
+    for file in os.listdir('results'):
+        with open('results/'+file, 'r') as f:
+            this_result = f.read()
+            results += this_result
+
+        with open('results.txt', 'w') as r:
+            r.write(results)
+
+    shutil.rmtree('results')
+
 
 
 def multicore_compare(keyword, valid, valid_ids):
