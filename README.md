@@ -18,9 +18,7 @@ Sidenotes:
 
 - only 105 results are generated, of 107 specified keywords in keywords.txt, since the two words
 'order' and 'waggons' appear each in upper and lower case, which is ignored.
-- optionally run 'normalize_results' after the calculation to evaluate its effect on precision and
-recall. (trying to account for keywords with naturally higher distances than others, could lead to
-better results in general)
+- the results produced are saved once with the raw distances ('results.txt') and once with normalized values (summing to 100) in the 'resutls_norm.txt'
 - the resulting plot from the evaluation is still not entierly correct (start of the line should be
 at a precision value of 1 on the left side), due to some unresolved bugs
 
