@@ -1,6 +1,7 @@
 import os
 import glob
 import shutil
+import re
 from tqdm import tqdm
 import numpy as np
 from Featurize import featurize
@@ -129,6 +130,22 @@ def combine_results():
 
     shutil.rmtree('results')
 
+
+def transform_old_output_to_new():
+    results = ''
+    for file in os.listdir('results'):
+        keyword = file[:-4]
+        results += keyword + ', '
+        with open('results/'+file, 'r') as f:
+            this_result = f.read().splitlines()
+            this_result = [s.split(' ') for s in this_result]
+            this_result = [item for sublist in this_result for item in sublist]
+            results += ', '.join(this_result) + ' \n'
+
+    with open('results.txt', 'w') as r:
+        r.write(results)
+
+    shutil.rmtree('results')
 
 
 def multicore_compare(keyword, valid, valid_ids):
