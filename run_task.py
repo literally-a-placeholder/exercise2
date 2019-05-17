@@ -33,14 +33,14 @@ def main():
 
     # featurize ALL images from valid pages and store to use for all keywords
     print('\nFeaturize all valid images...')
-    featurized_valid = featurize_list(valid_img_paths[:10])
+    featurized_valid = featurize_list(valid_img_paths)
 
     # for each keyword compare to all valid words and save results in <keyword>.txt
     print('\nCompute all distances of each keyword to each word of the valid pages...')
 
     pool = Pool(processes=cpu_count())
     func = partial(multicore_compare, valid=featurized_valid, valid_ids=valid_img_ids)
-    pool.map(func, keywords[:3])
+    pool.map(func, keywords)
     pool.close()
     pool.join()
 
