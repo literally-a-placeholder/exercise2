@@ -23,5 +23,10 @@ def normalize_values(results_arr):
     results_arr[:, 1] = scores
 
 
+def normalize_dict_values(d, target=1.0):
+    factor = target / sum(d.values())
+    return {key: value*factor for key, value in d.items()}
+
+
 if __name__ == '__main__':
     main()

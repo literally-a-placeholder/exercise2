@@ -4,6 +4,7 @@ from math import log
 from tqdm import tqdm
 import numpy as np
 from Featurize import featurize
+from normalize_results import normalize_dict_values
 from DTW import DTWDistance
 
 
@@ -91,8 +92,13 @@ def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False, normali
         lowest_dist = min(valid_word_distances)
         result[valid_ids[valid_id]] = lowest_dist
 
+    if normalize:
+        result = normalize_dict_values(result)
+
     if save_as_txt:
         target_dir = 'results'
+        if normalize:
+            target_dir += '_norm'
         if not os.path.isdir(target_dir):
             os.mkdir(target_dir)
 
@@ -103,8 +109,12 @@ def compare_all(keyword, featurized_valid, valid_ids, save_as_txt=False, normali
 
 def sort_result_and_save_as_txt(result, keyword, target_dir):
     with open('{}/{}.txt'.format(target_dir, keyword), 'w') as f:
-        for key, value in sorted(result.items(), key=lambda item: item[1], reverse=True):
-            f.write('{} {}\n'.format(key, value))
+
+        keyword_result_string = keyword
+        for key, value in sorted(result.items(), key=lambda item: item[1], reverse=False):
+            keyword_result_string += ', ' + str(key) + ', ' + str(value)
+
+        f.write(keyword_result_string + '\n')
 
 
 def multicore_compare(keyword, valid, valid_ids):
