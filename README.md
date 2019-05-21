@@ -5,6 +5,15 @@ Your task is to develop a machine learning approach for spotting keywords in the
 You can test your approach on the provided training and validation dataset where you find a list of
 keywords that you can find for certain at least once in each set.
 
+## Competition ##
+The results from the competition (started on 21st of May, 2019) are located in the 'results_test' directory.
+
+Containing:
+- 'results.txt': sorted list for all keywords with sorted raw euclidean distances
+- 'results_norm.txt': sorted list for all keywords with sorted normalized dissimilarity measures (to account for innate differences in distances for different keywords). This is the intended output. Only use the raw distances if problems occur with further analysis.
+
+To get the best results use the 'results_norm.txt' for precision/recall analysis of the system.
+
 ## Run ##
 Clone the project and run the following command from the root folder to install all dependencies.
 
