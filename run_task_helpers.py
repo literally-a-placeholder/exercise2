@@ -15,7 +15,7 @@ def get_train_valid_page_nrs():
         for line in f:
             train_pages.append(line.rstrip('\n'))
 
-    with open('task/valid.txt', 'r') as f:
+    with open('task/test.txt', 'r') as f:
         valid_pages = []
         for line in f:
             valid_pages.append(line.rstrip('\n'))
