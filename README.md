@@ -14,6 +14,19 @@ Containing:
 
 To get the best results use the 'results_norm.txt' for precision/recall analysis of the system.
 
+Output format as specified in the lecture:
+
+```
+Keyword1, testword_ID1, dissimilarity1, testword_ID2, dissimilarity2, ...
+Keyword2, testword_ID1, dissimilarity1, testword_ID2, dissimilarity2, ...
+```
+Example:
+```
+051, 46, 6.40341144, 21, 7.62949846, 17, 9.18516724, 03, 10.47132116, […]
+043, 02, 0.99152807, 22, 4.82357323, 14, 2.14435743, 42, 5.05044537, […]
+[…]
+```
+
 ## Run ##
 Clone the project and run the following command from the root folder to install all dependencies.
 
